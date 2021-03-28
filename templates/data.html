@@ -1,0 +1,605 @@
+{% extends 'layout/page.html' %} {% load static %} {% block body %}
+  <body class="">
+    <div class="wrapper">
+      <div
+        class="sidebar"
+        data-color="purple"
+        data-background-color="white"
+        data-image="{%static 'img/sidebar-1.jpg'%}"
+      >
+        <div class="logo">
+          <div class="text-center">
+            <img
+              src="{%static 'img/dark_logo.png' %}"
+              alt="Dark Logo"
+              style="width: 50%; height: auto"
+            />
+          </div>
+          <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+            REAL ESTATE OMANE
+          </a>
+        </div>
+        <div class="sidebar-wrapper">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/dashboard">
+                <i class="material-icons">home</i>
+                <p>Home</p>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/data">
+                <i class="fa fa-database" aria-hidden="true"></i>
+                <p>Data</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user">
+                <i class="material-icons">person</i>
+                <p>User Management</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/scraping?start=false">
+                <i class="material-icons">search</i>
+                <p>Data scraping</p>
+              </a>
+            </li>
+            <li></li>
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <p>Sign Out</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <nav
+          class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top"
+        >
+          <div class="container-fluid">
+            <div class="navbar-wrapper">
+              <a class="navbar-brand" href="javascript:;">Real Estate Data</a>
+            </div>
+            <button
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#exampleModal"
+            >
+              <i class="fa fa-filter fa-icon" aria-hidden="true"></i>
+              Filters
+            </button>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              aria-controls="navigation-index"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+            </button>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                <div id="pagenation">
+                  <p><span  style="color: red; font-weight: bold">{{page_index}}</span>&nbsp page/<span  style="color: red; font-weight: bold">{{num_per_page}}</span> items &nbsp <span  style="color: red; font-weight: bold">{{num}}</span> items</p>
+                  <input type="button" value="Prev" onclick="click_prev()" id="prevbutton"/>
+                  <input type="button" value="Next" onclick="click_next()" id="nextbutton"/>
+                </div>
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <h4 class="card-title">Information Table</h4>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead class="text-primary">
+                          <th>Region</th>
+                          <th>State (Willayat)</th>
+                          <th>Village</th>
+                          <th>Zone</th>
+                          <th>Price</th>
+                          <th>Area</th>
+                          <th>Contract</th>
+                          <th>Type</th>
+                          <th>Source</th>
+                          <th>Year</th>
+                        </thead>
+                        <tbody>
+                          {% for item in data %}
+                            <tr>
+                              <td>{{item.region}}</td>
+                              <td>{{item.state}}</td>
+                              <td>{{item.village}}</td>
+                              <td>{{item.zone}}</td>
+                              <td>{{item.price}}</td>
+                              <td>{{item.area}}</td>
+                              <td>{{item.contract}}</td>
+                              <td>{{item.type}}</td>
+                              <td>{{item.source}}</td>
+                              <td>{{item.year}}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                        <script>
+                          var items=[]
+                        </script>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Filters</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row mx-2 my-2">
+                <form style="width: 100%" action="/data">
+                  <!-- {% csrf_token %}   -->
+                  <div
+                    style="
+                      width: 100%;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-around;
+                    "
+                  >
+                    <label for="date" class="input-group-text" style="width: 20%"
+                      >By Dates:</label
+                    >
+                    <input
+                      style="width: 40%; margin-right: 10px; text-align: center"
+                      type="text"
+                      placeholder="From"
+                      name = 'from'
+                      value="{{filter_from}}"
+                    />
+                    <input
+                      style="width: 40%; text-align: center"
+                      type="text"
+                      placeholder="To"
+                      name = 'to'
+                      value="{{filter_to}}"
+                    />
+                  </div>
+                  <div
+                    style="
+                      margin-top: 10px;
+                      width: 100%;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-around;
+                    "
+                  >
+                    <label for="date" class="input-group-text" style="width: 20%"
+                      >By Location:</label
+                    >
+                    <input
+                      style="width: 40%; margin-right: 10px; text-align: center"
+                      type="text"
+                      placeholder="Region"
+                      style="text-align: center"
+                      name = 'region'
+                      value="{{filter_region}}"
+                    />
+                    <input
+                      style="width: 40%; text-align: center"
+                      type="text"
+                      placeholder="State"
+                      style="text-align: center"
+                      name = 'state'
+                      value="{{filter_state}}"
+                    />
+                  </div>
+                  <div
+                    style="
+                      margin-top: 10px;
+                      width: 100%;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-around;
+                    "
+                  >
+                    <label for="date" class="input-group-text" style="width: 20%">
+                      &nbsp;
+                    </label>
+                    <input
+                      style="width: 40%; margin-right: 10px; text-align: center"
+                      type="text"
+                      placeholder="Village"
+                      style="text-align: center"
+                      name = 'village'
+                      value="{{filter_village}}"
+                    />
+                    <input
+                      style="width: 40%; text-align: center"
+                      type="text"
+                      placeholder="Zone Number"
+                      style="text-align: center"
+                      name = 'zone'
+                      value="{{filter_zone}}"
+                    />
+                  </div>
+                  <div
+                    style="
+                      width: 100%;
+                      margin-top: 10px;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-around;
+                    "
+                  >
+                    <label for="date" class="input-group-text" style="width: 20%"
+                      >Price Range:</label>
+                    <input
+                      style="width: 40%; margin-right: 10px; text-align: center"
+                      type="text"
+                      placeholder="Min"
+                      name = 'min'
+                      value="{{filter_min}}"
+                    />
+                    <input
+                      style="width: 40%; text-align: center"
+                      type="text"
+                      placeholder="Max"
+                      name = 'max'
+                      value="{{filter_max}}"
+                    />
+                  </div>
+                  <div
+                    style="
+                      margin-top: 10px;
+                      width: 100%;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-around;
+                    "
+                  >
+                    <label
+                      for="date"
+                      style="width: 20%; color: #495057; font-size: 16px"
+                    >
+                      By Source:
+                    </label>
+                    <div
+                      class="form-check"
+                      style="width: 40%; margin-right: 10px"
+                    >
+                      <label class="form-check-label" style="color: black">
+                        <input class="form-check-input" type="checkbox" name='housing' {% if filter_housing%} checked {% endif %}/>
+                        Ministry Of Housing
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check" style="width: 40%">
+                      <label class="form-check-label" style="color: black">
+                        <input class="form-check-input" type="checkbox"  name = 'external' {% if filter_external%} checked {% endif %}/>
+                        External Websites
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      margin-top: 10px;
+                      width: 100%;
+                      display: flex;
+                      flex-direction: row;
+                      justify-content: space-around;
+                    "
+                  >
+                    <label
+                      for="date"
+                      style="width: 20%; color: #495057; font-size: 16px"
+                    >
+                      By Contract:
+                    </label>
+                    <div
+                      class="form-check"
+                      style="width: 20%; margin-right: 10px"
+                    >
+                      <label class="form-check-label" style="color: black">
+                        <input class="form-check-input" type="checkbox"  name="sale" {% if filter_sale%} checked {% endif %}/>
+                        Sale
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check" style="width: 20%">
+                      <label class="form-check-label" style="color: black">
+                        <input class="form-check-input" type="checkbox" name="mortgage"  {% if filter_mortgage%} checked {% endif %}/>
+                        Mortgage
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check" style="width: 20%">
+                      <label class="form-check-label" style="color: black">
+                        <input class="form-check-input" type="checkbox" name="swap" {% if filter_swap%} checked {% endif %} />
+                        Swap
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                    <div style="width: 20%"></div>
+                  </div>
+                  <div
+                    style="
+                      margin-top: 10px;
+                      width: 100%;
+                      display: flex;
+                      flex-direction: row;
+                    "
+                  >
+                    <label
+                      for="date"
+                      style="width: 20%; color: #495057; font-size: 16px"
+                    >
+                      By Type:
+                    </label>
+                    <div class="autocomplete" style="width:300px;">
+                      <input 
+                        style="width: 100%; text-align: center; padding: 5px"  
+                        id="myInput" 
+                        type="text" 
+                        name="type" 
+                        placeholder="Type" 
+                        value="{{filter_type}}">
+                    </div><br><br>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-dismiss="modal"
+                    ></button>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                  </div>
+                </div>
+                </form>
+              </div>
+            </div>
+      </div>    
+    </div>
+    <style>
+      #pagenation{
+        display:  inline-block;
+      }
+      #pagenation input{
+        background-color: #8e24aa;
+        border:none;
+        color: white;
+        border-radius: 5px;
+        padding: 3px 10px 3px 10px;
+      }
+      #pagenation input:hover{
+        background-color: purple;
+      }
+      #pagenation input:focus{
+        background-color: purple;
+        cursor: pointer;
+      }
+      #pagenation input:disabled{
+        background-color: grey;
+        cursor: pointer;
+      }
+    </style>
+    <!-- End Modal -->
+    
+    <script>
+      index = parseInt("{{page_index}}");
+      if(index<=1){
+        document.getElementById('prevbutton').disabled =true
+      }
+      else {
+        document.getElementById('prevbutton').disabled =false
+      }
+      // parseInt("{{total_number}}")
+      if(index*30>"{{num}}"){
+        document.getElementById('nextbutton').disabled =true
+      }
+      else{
+        document.getElementById('nextbutton').disabled =false
+      }
+      filter_param = '&from='+"{{filter_from}}"+'&to='+"{{filter_to}}"+'&region='+"{{filter_region}}"+'&state='+"{{filter_state}}"+'&village='+"{{filter_village}}"+'&zone='+"{{filter_zone}}"+'&min='+"{{filter_min}}"+'&max='+"{{filter_max}}"+'&type='+"{{filter_type}}";
+      filter_param += '&&housing='+"{{filter_housing}}"+'&external='+"{{filter_external}}"+'&sale='+"{{filter_sale}}"+'&mortgage='+"{{filter_mortgage}}"+'&swap='+"{{filter_swap}}"
+      function click_next(){
+        index += 1;
+        window.location.href = '/data?index='+index.toString() + filter_param
+      }
+      function click_prev(){
+        index -= 1;
+        window.location.href = '/data?index='+index.toString() + filter_param
+      }
+
+    </script>
+    <script>
+      var countries = [
+        "Governmental",
+        "Tourist",
+        "Agricultural",
+        "Industrial",
+        "Residential",
+        "Commercial",
+        "Residential",
+        "Residential/Commercial",
+        "Others"];
+  </script>
+    <script>
+      function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+              /*check if the item starts with the same letters as the text field value:*/
+              if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                /*create a DIV element for each matching element:*/
+                b = document.createElement("DIV");
+                /*make the matching letters bold:*/
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                /*insert a input field that will hold the current array item's value:*/
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                    /*insert the value for the autocomplete text field:*/
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    /*close the list of autocompleted values,
+                    (or any other open lists of autocompleted values:*/
+                    closeAllLists();
+                });
+                a.appendChild(b);
+              }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+              /*If the arrow DOWN key is pressed,
+              increase the currentFocus variable:*/
+              currentFocus++;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 38) { //up
+              /*If the arrow UP key is pressed,
+              decrease the currentFocus variable:*/
+              currentFocus--;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 13) {
+              /*If the ENTER key is pressed, prevent the form from being submitted,*/
+              e.preventDefault();
+              if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+              }
+            }
+        });
+        function addActive(x) {
+          /*a function to classify an item as "active":*/
+          if (!x) return false;
+          /*start by removing the "active" class on all items:*/
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = (x.length - 1);
+          /*add class "autocomplete-active":*/
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+          /*a function to remove the "active" class from all autocomplete items:*/
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+        function closeAllLists(elmnt) {
+          /*close all autocomplete lists in the document,
+          except the one passed as an argument:*/
+          var x = document.getElementsByClassName("autocomplete-items");
+          for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+          }
+        }
+      }
+      /*execute a function when someone clicks in the document:*/
+      document.addEventListener("click", function (e) {
+          closeAllLists(e.target);
+      });
+      }
+    </script>
+    <script>
+      autocomplete(document.getElementById("myInput"), countries);
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+        .autocomplete {
+          /*the container must be positioned relative:*/
+          position: relative;
+          display: inline-block;
+        }
+        .autocomplete-items {
+          position: absolute;
+          border: 1px solid #d4d4d4;
+          border-bottom: none;
+          border-top: none;
+          z-index: 99;
+          /*position the autocomplete items to be the same width as the container:*/
+          top: 100%;
+          left: 0;
+          right: 0;
+        }
+        .autocomplete-items div {
+          padding: 10px;
+          cursor: pointer;
+          background-color: #fff;
+          border-bottom: 1px solid #d4d4d4;
+        }
+        .autocomplete-items div:hover {
+          /*when hovering an item:*/
+          background-color: #e9e9e9;
+        }
+        .autocomplete-active {
+          /*when navigating through the items using the arrow keys:*/
+          background-color: DodgerBlue !important;
+          color: #ffffff;
+        }
+    </style>
+    {% endblock %}

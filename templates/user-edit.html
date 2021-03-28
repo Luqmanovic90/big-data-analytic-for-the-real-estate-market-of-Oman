@@ -1,0 +1,189 @@
+{% extends 'layout/page.html' %} {% load static %} {% block body %}
+  <body class="">
+    <div class="wrapper">
+      <div
+        class="sidebar"
+        data-color="purple"
+        data-background-color="white"
+        data-image="{%static 'img/sidebar-1.jpg'}"
+      >
+        <div class="logo">
+          <div class="text-center">
+            <img
+              src="{%static 'img/dark_logo.png' %}"
+              alt="Dark Logo"
+              style="width: 50%; height: auto"
+            />
+          </div>
+          <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+            REAL ESTATE OMANE
+          </a>
+        </div>
+        <div class="sidebar-wrapper">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/dashboard">
+                <i class="material-icons">home</i>
+                <p>Home</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/data">
+                <i class="fa fa-database" aria-hidden="true"></i>
+                <p>Data</p>
+              </a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/user">
+                <i class="material-icons">person</i>
+                <p>User Management</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/scraping?start=false">
+                <i class="material-icons">search</i>
+                <p>Data scraping</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <p>Sign Out</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <nav
+          class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top"
+        >
+          <div class="container-fluid">
+            <div class="navbar-wrapper">
+              <a class="navbar-brand" href="javascript:;">User Management</a>
+            </div>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              aria-controls="navigation-index"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+            </button>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header card-header-primary">
+                    <h4 class="card-title">Add New User</h4>
+                  </div>
+                  <div class="card-body">
+                    <form action="/user">
+                      <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label"
+                          >Name</label
+                        >
+                        <div class="col-sm-10">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="inputEmail3"
+                            name="name"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label"
+                          >Email</label
+                        >
+                        <div class="col-sm-10">
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="inputEmail3"
+                            name="email"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label"
+                          >Username</label
+                        >
+                        <div class="col-sm-10">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="inputEmail3"
+                            name="username"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label"
+                          >Phone</label
+                        >
+                        <div class="col-sm-10">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="inputEmail3"
+                            name="phone"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="password-field" class="col-sm-2 col-form-label"
+                          >Password  </label
+                        >
+                        <div class="input-group col-sm-10">
+                          <input
+                          type="password"
+                          class="form-control"
+                          id="password-field"
+                          name="password"
+                          />
+                          <div class="input-group-append" style="display: flex; align-items: center;">                            
+                            <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                          </div>                         
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-10">
+                          <button type="submit" class="btn btn-primary">
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(".toggle-password").click(function() {
+
+      $(this).toggleClass("fa-eye fa-eye-slash");
+      var input = $($(this).attr("toggle"));
+      if (input.attr("type") == "password") {
+        input.attr("type", "text");
+      } else {
+        input.attr("type", "password");
+      }
+      });
+    </script>
+    {% endblock %}
+    

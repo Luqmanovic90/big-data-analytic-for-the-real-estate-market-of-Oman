@@ -1,0 +1,28 @@
+#username-input {
+  color: white;
+  /* margin-bottom: 20px; */
+}
+
+#password-input {
+  color: white;
+  margin-bottom: 20px;
+}
+
+#username-input::placeholder {
+  color: #ccc;
+}
+
+#password-input::placeholder {
+  color: #ccc;
+}
+
+.fa-icon {
+  color: #fff;
+}
+
+#page-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

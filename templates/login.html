@@ -1,0 +1,44 @@
+{% extends 'layout/page.html' %} {% load static %} {% block body %}
+  <body class="offline-doc">
+    <div class="page-header clear-filter">
+      <div class="page-header-image"></div>
+      <div class="content-center">
+        <div class="col-md-8 ml-auto mr-auto">
+          <div class="brand">
+            <img src="{%static 'img/light_logo.png' %}" alt="Website Logo" />
+            <div class="mb-5"><h1>REAL ESTATE OMAN</h1></div>
+            <form action="/"  method="POST">{% csrf_token %}
+              <div class="form-group">
+                <!-- <label for="exampleInputEmail1">Username</label> -->
+                <input
+                type="text"
+                class="form-control"
+                id="username-input"
+                aria-describedby="emailHelp"
+                placeholder="Enter Username"
+                name="logined_username"
+                />
+              </div>
+              <div class="form-group">
+                <!-- <label for="exampleInputPassword1">Password</label> -->
+                <input
+                type="password"
+                class="form-control"
+                id="password-input"
+                placeholder="Enter Password"
+                name="logined_password"
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary btn-block"
+                >
+                Sign In
+              </button>
+            </form>
+            <p>{{login_status}}<p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock %}

@@ -1,0 +1,326 @@
+{% extends 'layout/page.html' %} {% load static %} {% block body %}
+  <body class="">
+    <div class="wrapper">
+      <!-- Start Sidebar -->
+      <div
+        class="sidebar"
+        data-color="purple"
+        data-background-color="white"
+        data-image="{%static 'img/sidebar-1.jpg' %}"
+      >
+        <div class="logo">
+          <div class="text-center">
+            <img
+              src="{%static 'img/dark_logo.png' %}"
+              alt="Dark Logo"
+              style="width: 50%; height: auto"
+            />
+          </div>
+          <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+            REAL ESTATE OMANE
+          </a>
+        </div>
+        <div class="sidebar-wrapper">
+          <ul class="nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/dashboard">
+                <i class="material-icons">home</i>
+                <p>Home</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/data">
+                <i class="fa fa-database" aria-hidden="true"></i>
+                <p>Data</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user">
+                <i class="material-icons">person</i>
+                <p>User Management</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/scraping?start=false">
+                <i class="material-icons">search</i>
+                <p>Data scraping</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <p>Sign Out</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- End Sidebar -->
+
+      <!-- Start Main Panel -->
+      <div class="main-panel">
+        <!-- Navbar -->
+        <nav
+          class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top"
+        >
+          <div class="container-fluid">
+            <div class="navbar-wrapper">
+              <a class="navbar-brand" href="javascript:;">Dashboard</a>
+            </div>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              aria-controls="navigation-index"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+              <span class="navbar-toggler-icon icon-bar"></span>
+            </button>
+
+            <!--Make sure the form has the autocomplete function switched off:-->
+            <form autocomplete="off" action="/dashboard">
+              <div class="autocomplete" style="width:300px;">
+                <input id="regionInput" type="text" name="region" placeholder="Region" value="{{selected_region}}">
+              </div>
+              <div class="autocomplete" style="width:300px;">
+                <input id="stateInput" type="text" name="state" placeholder="State" value="{{selected_state}}">
+              </div>
+              <input type="submit" value="Search">
+            </form>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6">
+                <div>
+                  <div class="card" style="padding: 25px 10px 10px 10px; text-align: center;">
+                    <h5>Total NO <span style="font-weight: bold; color: red;">{{total}}</span> of Contracts
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="card" style="padding: 10px; text-align: center;">
+                      <h5><span style="font-weight: bold; color: red;">{{sale}}</span> <br> for sale</h5>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card" style="padding: 10px; text-align: center;">
+                      <h5><span style="font-weight: bold; color: red;">{{swap}}</span> <br> for Mortgage</h5>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="card" style="padding: 10px; text-align: center;">
+                      <h5><span style="font-weight: bold; color: red;">{{mortgage}}</span> <br> for Swap</h5>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card">
+                  <canvas id="myChart2"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card" style="padding: 1rem;">
+                  <canvas id="myChart1"></canvas>
+                </div>
+                <div class="card" style="padding: 25px;">
+                  <p>Total Trans actions <span style="font-weight: bold; color: red;">{{total_contract_number}}</span></P>
+                  <p>Total areas <span style="font-weight: bold; color: red;">{{total_area}}</span> m2</P>
+                </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="card">
+                    <canvas id="oilChart" ></canvas>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Main Panel -->
+    </div>
+    <script>
+      var countries = [
+        "Al Dakhiliya",
+        "Al Dhahirah",
+        "Al Batinah",
+        "Buraimi",
+        "Al Wustaa",
+        "Al Sharqiya",
+        "Dhofar",
+        "Muscat",
+        "Musandam",];
+      var state = [
+        "Adam",
+        "Seeb",
+        "Al Ashkharah",
+        "Al-Buraimi",
+        "Al Wustaa",
+        "Al Sharqiya",
+        "Dhofar",
+        "Muscat",
+        "Musandam",];
+    </script>
+    <script>
+      function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) { return false;}
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+              /*check if the item starts with the same letters as the text field value:*/
+              if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                /*create a DIV element for each matching element:*/
+                b = document.createElement("DIV");
+                /*make the matching letters bold:*/
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                /*insert a input field that will hold the current array item's value:*/
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                    /*insert the value for the autocomplete text field:*/
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    /*close the list of autocompleted values,
+                    (or any other open lists of autocompleted values:*/
+                    closeAllLists();
+                });
+                a.appendChild(b);
+              }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+              /*If the arrow DOWN key is pressed,
+              increase the currentFocus variable:*/
+              currentFocus++;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 38) { //up
+              /*If the arrow UP key is pressed,
+              decrease the currentFocus variable:*/
+              currentFocus--;
+              /*and and make the current item more visible:*/
+              addActive(x);
+            } else if (e.keyCode == 13) {
+              /*If the ENTER key is pressed, prevent the form from being submitted,*/
+              e.preventDefault();
+              if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+              }
+            }
+        });
+        function addActive(x) {
+          /*a function to classify an item as "active":*/
+          if (!x) return false;
+          /*start by removing the "active" class on all items:*/
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = (x.length - 1);
+          /*add class "autocomplete-active":*/
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+          /*a function to remove the "active" class from all autocomplete items:*/
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+        function closeAllLists(elmnt) {
+          /*close all autocomplete lists in the document,
+          except the one passed as an argument:*/
+          var x = document.getElementsByClassName("autocomplete-items");
+          for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+            x[i].parentNode.removeChild(x[i]);
+          }
+        }
+      }
+      /*execute a function when someone clicks in the document:*/
+      document.addEventListener("click", function (e) {
+          closeAllLists(e.target);
+      });
+      }
+    </script>
+    <script>
+      autocomplete(document.getElementById("regionInput"), countries);
+      autocomplete(document.getElementById("stateInput"), state);
+    </script>
+    <style>
+      * { box-sizing: border-box; }
+      .autocomplete {
+        /*the container must be positioned relative:*/
+        position: relative;
+        display: inline-block;
+      }
+      input {
+        border: 2px solid black;
+        background-color: #f1f1f1;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 0.3rem;
+      }
+      input[type=text] {
+        background-color: #f1f1f1;
+        width: 100%;
+      }
+      input[type=submit] {
+        background-color: DodgerBlue;
+        color: #fff;
+      }
+      .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+      }
+      .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+      }
+      .autocomplete-items div:hover {
+        /*when hovering an item:*/
+        background-color: #e9e9e9;
+      }
+      .autocomplete-active {
+        /*when navigating through the items using the arrow keys:*/
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+      }
+  </style>
+    {% endblock %}
+
+    
